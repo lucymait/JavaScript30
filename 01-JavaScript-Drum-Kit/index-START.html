@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+  <div class="keys">
+        <!-- data-key = the keyboard number (can search for this on keycode.info) -->
+    <div data-key="65" class="key">
+      <kbd>A</kbd>
+      <span class="sound">clap</span>
+    </div>
+    <div data-key="83" class="key">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+    <div data-key="74" class="key">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+    <div data-key="76" class="key">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+   <!-- play corresponding sound to the data attribute (this hooks this up with the key) -->
+  <audio data-key="65" src="sounds/clap.wav"></audio>
+  <audio data-key="83" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" src="sounds/kick.wav"></audio>
+  <audio data-key="70" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" src="sounds/boom.wav"></audio>
+  <audio data-key="72" src="sounds/ride.wav"></audio>
+  <audio data-key="74" src="sounds/snare.wav"></audio>
+  <audio data-key="75" src="sounds/tom.wav"></audio>
+  <audio data-key="76" src="sounds/tink.wav"></audio>
+
+<script>
+
+function playSound(e){
+    // we want to find out if any of the keys pressed has an audio attached to it
+    // only looking for one = so its querySelector (if many querySelectorAll)
+    // want to listen for 'audio'. Use an attribute selector (similar to selecting a class) to select the data-key attribute
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`)
+    // to add animation we need to select the class key
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`)
+    // console.log(audio)
+    if(!audio) return // stop function from running all together
+    audio.currentTime = 0 // this lets you play it over and over again
+    audio.play()
+    key.classList.add('playing')
+    // key.classList.remove('playing')
+    // key.classList.toggle('playing')
+}
+
+function removeTransition(e) {
+  if(e.propertyName !== 'transform') return
+  // this is equal to the key
+  this.classList.remove('playing')
+}
+
+const keys = document.querySelectorAll('.key')
+// when you have an array you cant listen on all of them so you have to loop through each one
+  keys.forEach(key => {
+    key.addEventListener('transitionend', removeTransition)
+  })
+
+// the event we are listening to is keydown
+// next need a function with an event
+// we are going to listen for the keydown event, when that happens we will run the function that gives us the event (playSound)
+window.addEventListener('keydown', playSound)
+</script>
+
+
+</body>
+</html>
